@@ -17,7 +17,7 @@
   .form-body { padding: 28px 28px 32px; }
   .field { margin-bottom: 20px; }
   label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--hub-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  label .req { color: var(--hub-blue); margin-left: 2px; }
+  label .req { color: var(--hub-blue); margin-left: 2px; }A
   select, input[type="number"], input[type="date"], input[type="text"], textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: "Open Sans", sans-serif; font-size: 0.95rem; color: var(--text); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; appearance: none; -webkit-appearance: none; }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230077C8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; cursor: pointer; }
   select:focus, input:focus, textarea:focus { outline: none; border-color: var(--hub-blue); box-shadow: 0 0 0 3px rgba(0,119,200,0.12); }
@@ -129,8 +129,7 @@ async function loadItems() {
   while (sel.options.length > 1) sel.remove(1);
   try {
     if (!SHEETDB_URL) throw new Error("No URL");
-    // Correct SheetDB GET endpoint for a specific sheet
-    const res  = await fetch(SHEETDB_URL + "?sheet=Inventory");
+    const res = await fetch(SHEETDB_URL + "?sheet=Inventory");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const rows = await res.json();
     const items = rows.map(r => r["Item Name"]).filter(Boolean);
@@ -207,15 +206,22 @@ async function submitForm() {
       })
     });
 
-    // 2. Check if item exists in Inventory
-    const searchRes = await fetch(SHEETDB_URL + "/search?sheet=Inventory&Item+Name=" + encodeURIComponent(item));
-    const existing  = searchRes.ok ? await searchRes.json() : [];
+    // 2. Search Inventory for existing item using correct SheetDB search format
+    const searchUrl = SHEETDB_URL + "/search?sheet=Inventory&" + new URLSearchParams({"Item Name": item}).toString();
+    const searchRes = await fetch(searchUrl);
+    let existing = [];
+    if (searchRes.ok) {
+      const txt = await searchRes.text();
+      try { existing = JSON.parse(txt); } catch(e) { existing = []; }
+      if (!Array.isArray(existing)) existing = [];
+    }
 
-    if (existing && existing.length > 0) {
+    if (existing.length > 0) {
       // Item exists — update quantity
       const currentQty = parseInt(existing[0]["Current Quantity"]) || 0;
       const newQty = type === "IN" ? currentQty + qty : Math.max(0, currentQty - qty);
-      await fetch(SHEETDB_URL + "/Item+Name/" + encodeURIComponent(item) + "?sheet=Inventory", {
+      // Use column value in URL path — SheetDB PATCH format
+      await fetch(SHEETDB_URL + "/Item%20Name/" + encodeURIComponent(item) + "?sheet=Inventory", {
         method: "PATCH",
         headers: {"Content-Type": "application/json"},
         body: JSON.stringify({ data: { "Current Quantity": String(newQty), "Last Updated": ts }})
