@@ -7,10 +7,7 @@
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;500&display=swap");
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --hub-blue: #0077C8; --hub-dark: #003865; --hub-light: #e8f4fc;
-    --white: #ffffff; --gray: #f5f7fa; --border: #d0dce8; --text: #1a2a3a;
-  }
+  :root { --hub-blue: #0077C8; --hub-dark: #003865; --hub-light: #e8f4fc; --white: #ffffff; --gray: #f5f7fa; --border: #d0dce8; --text: #1a2a3a; }
   body { font-family: "Open Sans", sans-serif; background: var(--gray); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 24px 16px 48px; color: var(--text); }
   .card { background: var(--white); border-radius: 16px; box-shadow: 0 4px 24px rgba(0,55,101,0.10); width: 100%; max-width: 520px; overflow: hidden; }
   .header { background: linear-gradient(135deg, var(--hub-dark) 0%, var(--hub-blue) 100%); padding: 32px 28px 24px; text-align: center; }
@@ -21,16 +18,8 @@
   .field { margin-bottom: 20px; }
   label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--hub-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
   label .req { color: var(--hub-blue); margin-left: 2px; }
-  select, input[type="number"], input[type="date"], input[type="text"], textarea {
-    width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px;
-    font-family: "Open Sans", sans-serif; font-size: 0.95rem; color: var(--text);
-    background: var(--white); transition: border-color 0.2s, box-shadow 0.2s;
-    appearance: none; -webkit-appearance: none;
-  }
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230077C8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-    background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; cursor: pointer;
-  }
+  select, input[type="number"], input[type="date"], input[type="text"], textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: "Open Sans", sans-serif; font-size: 0.95rem; color: var(--text); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; appearance: none; -webkit-appearance: none; }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230077C8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; cursor: pointer; }
   select:focus, input:focus, textarea:focus { outline: none; border-color: var(--hub-blue); box-shadow: 0 0 0 3px rgba(0,119,200,0.12); }
   textarea { resize: vertical; min-height: 90px; }
   .toggle-group { display: flex; gap: 12px; }
@@ -44,9 +33,7 @@
   .load-err { font-size: 0.83rem; color: #c0392b; padding: 8px 12px; background: #fdf0ef; border-radius: 6px; margin-top: 6px; }
   .divider { height: 1px; background: var(--border); margin: 22px 0; }
   .submit-btn { width: 100%; padding: 15px; background: linear-gradient(135deg, var(--hub-blue) 0%, var(--hub-dark) 100%); color: white; border: none; border-radius: 10px; font-family: "Montserrat", sans-serif; font-size: 1rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s, transform 0.1s; letter-spacing: 0.5px; }
-  .submit-btn:hover { opacity: 0.92; }
-  .submit-btn:active { transform: scale(0.99); }
-  .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+  .submit-btn:hover { opacity: 0.92; } .submit-btn:active { transform: scale(0.99); } .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
   .success-screen { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 48px 28px; text-align: center; }
   .success-icon { width: 72px; height: 72px; background: #eafaf1; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }
   .success-icon svg { width: 38px; height: 38px; }
@@ -65,7 +52,6 @@
 </head>
 <body>
 <div class="card">
-
   <div id="formView">
     <div class="header">
       <img src="data:image/jpeg;base64,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" alt="Hub International Logo">
@@ -73,7 +59,6 @@
       <p>Hub International — Supply Log</p>
     </div>
     <div class="form-body">
-
       <div class="field">
         <label>Transaction Type <span class="req">*</span></label>
         <div class="toggle-group">
@@ -82,43 +67,34 @@
         </div>
         <input type="hidden" id="transactionType">
       </div>
-
       <div class="field">
         <label for="itemSelect">Item Name <span class="req">*</span></label>
         <div id="itemLoadingMsg" class="loading-items"><span class="mini-spin"></span> Loading items from inventory...</div>
         <select id="itemSelect" onchange="handleItemChange()" style="display:none;">
           <option value="" disabled selected>Select an item...</option>
         </select>
-        <div id="itemLoadErr" class="load-err" style="display:none;">
-          Could not load items. Using default list. <a href="#" onclick="loadItems();return false;">Retry</a>
-        </div>
+        <div id="itemLoadErr" class="load-err" style="display:none;">Could not load live items. Using default list. <a href="#" onclick="loadItems();return false;">Retry</a></div>
         <div class="custom-item-wrap" id="customWrap">
           <input type="text" id="customItem" placeholder="Type the new item name here..." maxlength="100">
-          <div class="custom-hint">✏️ This item will be added as a new row in the inventory sheet and appear in this dropdown next time.</div>
+          <div class="custom-hint">This item will be added to inventory and appear in the dropdown next time.</div>
         </div>
       </div>
-
       <div class="field">
         <label for="quantity">Quantity <span class="req">*</span></label>
         <input type="number" id="quantity" min="1" max="9999" placeholder="Enter quantity">
       </div>
-
       <div class="field">
         <label for="transDate">Date <span class="req">*</span></label>
         <input type="date" id="transDate">
       </div>
-
       <div class="divider"></div>
-
       <div class="field">
         <label for="notes">Notes / Comments</label>
         <textarea id="notes" placeholder="Any additional details (optional)..."></textarea>
       </div>
-
       <button class="submit-btn" id="submitBtn" onclick="submitForm()">Submit Entry</button>
     </div>
   </div>
-
   <div class="success-screen" id="successView">
     <div class="success-icon">
       <svg viewBox="0 0 24 24" fill="none" stroke="#2ecc71" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -127,7 +103,6 @@
     <p id="successMsg"></p>
     <button class="another-btn" onclick="resetForm()">Submit Another Entry</button>
   </div>
-
 </div>
 <div class="footer">Hub International &nbsp;|&nbsp; Promotional Items Inventory System</div>
 
@@ -135,94 +110,47 @@
 // ============================================================
 // CONFIGURATION — fill these in during setup
 // ============================================================
-
-// Your Power Automate HTTP POST URL (from Phase 4 of setup guide)
-const FLOW_URL = "";
-
-// Your Power Automate GET ITEMS URL (from Phase 5 of setup guide)
-// This is a separate flow that returns the item list from Excel
-const GET_ITEMS_URL = "";
-
+const SHEETDB_SUBMIT_URL = https://sheetdb.io/api/v1/7r1tvkk2u6hff
+const SHEETDB_ITEMS_URL  = https://sheetdb.io/api/v1/7r1tvkk2u6hff
 // ============================================================
-// FALLBACK ITEMS — used if Excel cannot be reached
-// ============================================================
+
 const FALLBACK_ITEMS = [
-  { group: "HUB Items", items: [
-    "Hub Vests","Hub Clips","Hub Pens","Hub Manicure Kit",
-    "HUB Cannabis Koozies","HUB Glasses","HUB Magnet Pin",
-    "HUB Hockey Pucks","HUB Glasses Cleaners","HUB Koozies",
-    "HUB Mints","HUB Polo (XS) - Patti","HUB Polo (S) - Patti",
-    "HUB Flip Flops","HUB Cooler Bags (M & A)","HUB Notebooks (M & A)",
-    "HUB Tumblers (incl. M & A)","HUB NJM Zip","HUB VP Face Mask"
-  ]},
-  { group: "CHUBB Items", items: [
-    "CHUBB Pens","CHUBB Phone Card Holders"
-  ]}
+  { group: "HUB Items", items: ["Hub Vests","Hub Clips","Hub Pens","Hub Manicure Kit","HUB Cannabis Koozies","HUB Glasses","HUB Magnet Pin","HUB Hockey Pucks","HUB Glasses Cleaners","HUB Koozies","HUB Mints","HUB Polo (XS) - Patti","HUB Polo (S) - Patti","HUB Flip Flops","HUB Cooler Bags (M & A)","HUB Notebooks (M & A)","HUB Tumblers (incl. M & A)","HUB NJM Zip","HUB VP Face Mask"] },
+  { group: "CHUBB Items", items: ["CHUBB Pens","CHUBB Phone Card Holders"] }
 ];
-// ============================================================
 
 document.getElementById("transDate").valueAsDate = new Date();
 let selectedType = "";
 
-// Load items from Excel via Power Automate on page load
 async function loadItems() {
-  const loadMsg  = document.getElementById("itemLoadingMsg");
-  const loadErr  = document.getElementById("itemLoadErr");
-  const sel      = document.getElementById("itemSelect");
-  loadMsg.style.display = "flex";
-  sel.style.display = "none";
-  loadErr.style.display = "none";
-
-  // Clear existing options (keep first placeholder)
+  const loadMsg = document.getElementById("itemLoadingMsg");
+  const loadErr = document.getElementById("itemLoadErr");
+  const sel     = document.getElementById("itemSelect");
+  loadMsg.style.display = "flex"; sel.style.display = "none"; loadErr.style.display = "none";
   while (sel.options.length > 1) sel.remove(1);
-
   try {
-    if (!GET_ITEMS_URL) throw new Error("No URL configured");
-
-    const res   = await fetch(GET_ITEMS_URL, { method: "GET", headers: { "Content-Type": "application/json" } });
-    const data  = await res.json();
-
-    // Expected response: { "items": ["Item A", "Item B", ...] }
-    const items = data.items || [];
-
-    if (items.length === 0) throw new Error("Empty list");
-
-    // Build a single flat list from live Excel data
+    if (!SHEETDB_ITEMS_URL) throw new Error("No URL");
+    const res  = await fetch(SHEETDB_ITEMS_URL + "/sheets/Inventory");
+    const rows = await res.json();
+    const items = rows.map(r => r["Item Name"]).filter(Boolean);
+    if (!items.length) throw new Error("Empty");
     const og = document.createElement("optgroup");
     og.label = "Inventory Items";
-    items.forEach(name => {
-      const o = document.createElement("option");
-      o.value = name; o.textContent = name;
-      og.appendChild(o);
-    });
+    items.forEach(name => { const o = document.createElement("option"); o.value = name; o.textContent = name; og.appendChild(o); });
     sel.appendChild(og);
-
   } catch(e) {
-    // Fall back to hardcoded list silently
-    loadErr.style.display = GET_ITEMS_URL ? "block" : "none";
+    if (SHEETDB_ITEMS_URL) loadErr.style.display = "block";
     FALLBACK_ITEMS.forEach(group => {
-      const og = document.createElement("optgroup");
-      og.label = group.group;
-      group.items.forEach(item => {
-        const o = document.createElement("option");
-        o.value = item; o.textContent = item;
-        og.appendChild(o);
-      });
+      const og = document.createElement("optgroup"); og.label = group.group;
+      group.items.forEach(item => { const o = document.createElement("option"); o.value = item; o.textContent = item; og.appendChild(o); });
       sel.appendChild(og);
     });
   }
-
-  // Always add the new item option at the bottom
-  const newOpt = document.createElement("option");
-  newOpt.value = "__NEW__";
-  newOpt.textContent = "+ Add an item not on this list";
+  const newOpt = document.createElement("option"); newOpt.value = "__NEW__"; newOpt.textContent = "+ Add an item not on this list";
   sel.appendChild(newOpt);
-
-  loadMsg.style.display = "none";
-  sel.style.display = "block";
+  loadMsg.style.display = "none"; sel.style.display = "block";
 }
-
-loadItems(); // Run on page load
+loadItems();
 
 function setType(type) {
   selectedType = type;
@@ -230,13 +158,11 @@ function setType(type) {
   document.getElementById("btnIn").className  = "toggle-btn" + (type === "IN"  ? " active-in"  : "");
   document.getElementById("btnOut").className = "toggle-btn" + (type === "OUT" ? " active-out" : "");
 }
-
 function handleItemChange() {
   const isNew = document.getElementById("itemSelect").value === "__NEW__";
   document.getElementById("customWrap").className = "custom-item-wrap" + (isNew ? " visible" : "");
   if (isNew) document.getElementById("customItem").focus();
 }
-
 function getFinalItemName() {
   const val = document.getElementById("itemSelect").value;
   return val === "__NEW__" ? document.getElementById("customItem").value.trim() : val;
@@ -245,37 +171,55 @@ function getFinalItemName() {
 async function submitForm() {
   const type  = document.getElementById("transactionType").value;
   const item  = getFinalItemName();
-  const qty   = document.getElementById("quantity").value;
+  const qty   = parseInt(document.getElementById("quantity").value);
   const date  = document.getElementById("transDate").value;
   const notes = document.getElementById("notes").value.trim();
   const isNew = document.getElementById("itemSelect").value === "__NEW__";
-
-  if (!type)           { alert("Please select Stocking In or Taking Out."); return; }
-  if (!item)           { alert(isNew ? "Please type the new item name." : "Please select an item."); return; }
+  if (!type)        { alert("Please select Stocking In or Taking Out."); return; }
+  if (!item)        { alert(isNew ? "Please type the new item name." : "Please select an item."); return; }
   if (!qty || qty < 1) { alert("Please enter a valid quantity."); return; }
-  if (!date)           { alert("Please select a date."); return; }
+  if (!date)        { alert("Please select a date."); return; }
 
   const btn = document.getElementById("submitBtn");
-  btn.disabled = true;
-  btn.innerHTML = '<span class="spinner"></span>Submitting...';
-
-  const payload = { transactionType: type, itemName: item, quantity: qty, date: date, notes: notes, isNewItem: isNew ? "YES" : "NO" };
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting...';
 
   try {
-    if (FLOW_URL) {
-      await fetch(FLOW_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload), mode: "no-cors" });
+    if (SHEETDB_SUBMIT_URL) {
+      const ts = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
+
+      // 1. Log to TransactionLog
+      await fetch(SHEETDB_SUBMIT_URL + "/sheets/TransactionLog", {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ data: [{ Timestamp: ts, "Transaction Type": type, "Item Name": item, Quantity: qty, Date: date, Notes: notes }]})
+      });
+
+      // 2. Check if item exists in Inventory
+      const invBase = SHEETDB_SUBMIT_URL + "/sheets/Inventory";
+      const searchRes = await fetch(invBase + "/search?Item+Name=" + encodeURIComponent(item));
+      const existing  = await searchRes.json();
+
+      if (existing && existing.length > 0) {
+        const currentQty = parseInt(existing[0]["Current Quantity"]) || 0;
+        const newQty = type === "IN" ? currentQty + qty : Math.max(0, currentQty - qty);
+        await fetch(invBase + "/Item+Name/" + encodeURIComponent(item), {
+          method: "PATCH", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ data: { "Current Quantity": newQty, "Last Updated": ts }})
+        });
+      } else {
+        await fetch(invBase, {
+          method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({ data: [{ "Item Name": item, "Current Quantity": qty, "Last Updated": ts }]})
+        });
+      }
     }
     document.getElementById("formView").style.display = "none";
     document.getElementById("successView").style.display = "flex";
     const action = type === "IN" ? "▲ Stocked In" : "▼ Taken Out";
     const newTag = isNew ? " <em>(new item — will appear in dropdown next time)</em>" : "";
-    document.getElementById("successMsg").innerHTML =
-      "<strong>" + action + ":</strong> " + qty + "x " + item + " on " + date + newTag +
-      "<br><br>The inventory sheet has been updated.";
+    document.getElementById("successMsg").innerHTML = "<strong>" + action + ":</strong> " + qty + "x " + item + " on " + date + newTag + "<br><br>The inventory sheet has been updated.";
   } catch(e) {
     alert("Submission failed. Please check your connection and try again.");
-    btn.disabled = false;
-    btn.innerHTML = "Submit Entry";
+    btn.disabled = false; btn.innerHTML = "Submit Entry";
   }
 }
 
@@ -293,7 +237,6 @@ function resetForm() {
   document.getElementById("notes").value = "";
   document.getElementById("submitBtn").disabled = false;
   document.getElementById("submitBtn").innerHTML = "Submit Entry";
-  // Reload fresh item list
   loadItems();
 }
 </script>
