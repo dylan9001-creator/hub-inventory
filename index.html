@@ -17,7 +17,7 @@
   .form-body { padding: 28px 28px 32px; }
   .field { margin-bottom: 20px; }
   label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--hub-dark); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  label .req { color: var(--hub-blue); margin-left: 2px; }A
+  label .req { color: var(--hub-blue); margin-left: 2px; }
   select, input[type="number"], input[type="date"], input[type="text"], textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: "Open Sans", sans-serif; font-size: 0.95rem; color: var(--text); background: var(--white); transition: border-color 0.2s, box-shadow 0.2s; appearance: none; -webkit-appearance: none; }
   select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230077C8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 38px; cursor: pointer; }
   select:focus, input:focus, textarea:focus { outline: none; border-color: var(--hub-blue); box-shadow: 0 0 0 3px rgba(0,119,200,0.12); }
@@ -70,7 +70,7 @@
       <div class="field">
         <label for="itemSelect">Item Name <span class="req">*</span></label>
         <div id="itemLoadingMsg" class="loading-items"><span class="mini-spin"></span> Loading items from inventory...</div>
-        <select id="itemSelect" onchange="handleItemChange()" style="display:none;">
+        <select id="itemSelect" onchange="handleItemChange()" style="display:none;width:100%;">
           <option value="" disabled selected>Select an item...</option>
         </select>
         <div id="itemLoadErr" class="load-err" style="display:none;">Could not load live items. Using default list. <a href="#" onclick="loadItems();return false;">Retry</a></div>
