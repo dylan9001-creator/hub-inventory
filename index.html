@@ -108,10 +108,9 @@
 
 <script>
 // ============================================================
-// CONFIGURATION — fill these in during setup
+// CONFIGURATION
 // ============================================================
-const SHEETDB_SUBMIT_URL = "https://sheetdb.io/api/v1/7r1tvkk2u6hff";
-const SHEETDB_ITEMS_URL  = "https://sheetdb.io/api/v1/7r1tvkk2u6hff";
+const SHEETDB_URL = "https://sheetdb.io/api/v1/7r1tvkk2u6hff";
 // ============================================================
 
 const FALLBACK_ITEMS = [
@@ -129,24 +128,35 @@ async function loadItems() {
   loadMsg.style.display = "flex"; sel.style.display = "none"; loadErr.style.display = "none";
   while (sel.options.length > 1) sel.remove(1);
   try {
-    if (!SHEETDB_ITEMS_URL) throw new Error("No URL");
-    const res  = await fetch(SHEETDB_ITEMS_URL + "/sheets/Inventory");
+    if (!SHEETDB_URL) throw new Error("No URL");
+    // Correct SheetDB GET endpoint for a specific sheet
+    const res  = await fetch(SHEETDB_URL + "?sheet=Inventory");
+    if (!res.ok) throw new Error("HTTP " + res.status);
     const rows = await res.json();
     const items = rows.map(r => r["Item Name"]).filter(Boolean);
     if (!items.length) throw new Error("Empty");
     const og = document.createElement("optgroup");
     og.label = "Inventory Items";
-    items.forEach(name => { const o = document.createElement("option"); o.value = name; o.textContent = name; og.appendChild(o); });
+    items.forEach(name => {
+      const o = document.createElement("option");
+      o.value = name; o.textContent = name;
+      og.appendChild(o);
+    });
     sel.appendChild(og);
   } catch(e) {
-    if (SHEETDB_ITEMS_URL) loadErr.style.display = "block";
+    loadErr.style.display = "block";
     FALLBACK_ITEMS.forEach(group => {
       const og = document.createElement("optgroup"); og.label = group.group;
-      group.items.forEach(item => { const o = document.createElement("option"); o.value = item; o.textContent = item; og.appendChild(o); });
+      group.items.forEach(item => {
+        const o = document.createElement("option");
+        o.value = item; o.textContent = item;
+        og.appendChild(o);
+      });
       sel.appendChild(og);
     });
   }
-  const newOpt = document.createElement("option"); newOpt.value = "__NEW__"; newOpt.textContent = "+ Add an item not on this list";
+  const newOpt = document.createElement("option");
+  newOpt.value = "__NEW__"; newOpt.textContent = "+ Add an item not on this list";
   sel.appendChild(newOpt);
   loadMsg.style.display = "none"; sel.style.display = "block";
 }
@@ -175,48 +185,61 @@ async function submitForm() {
   const date  = document.getElementById("transDate").value;
   const notes = document.getElementById("notes").value.trim();
   const isNew = document.getElementById("itemSelect").value === "__NEW__";
-  if (!type)        { alert("Please select Stocking In or Taking Out."); return; }
-  if (!item)        { alert(isNew ? "Please type the new item name." : "Please select an item."); return; }
+
+  if (!type)           { alert("Please select Stocking In or Taking Out."); return; }
+  if (!item)           { alert(isNew ? "Please type the new item name." : "Please select an item."); return; }
   if (!qty || qty < 1) { alert("Please enter a valid quantity."); return; }
-  if (!date)        { alert("Please select a date."); return; }
+  if (!date)           { alert("Please select a date."); return; }
 
   const btn = document.getElementById("submitBtn");
   btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>Submitting...';
 
   try {
-    if (SHEETDB_SUBMIT_URL) {
-      const ts = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
+    const ts = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
 
-      // 1. Log to TransactionLog
-      await fetch(SHEETDB_SUBMIT_URL + "/sheets/TransactionLog", {
-        method: "POST", headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({ data: [{ Timestamp: ts, "Transaction Type": type, "Item Name": item, Quantity: qty, Date: date, Notes: notes }]})
+    // 1. Log to TransactionLog
+    await fetch(SHEETDB_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        data: [{ Timestamp: ts, "Transaction Type": type, "Item Name": item, Quantity: qty, Date: date, Notes: notes }],
+        sheet: "TransactionLog"
+      })
+    });
+
+    // 2. Check if item exists in Inventory
+    const searchRes = await fetch(SHEETDB_URL + "/search?sheet=Inventory&Item+Name=" + encodeURIComponent(item));
+    const existing  = searchRes.ok ? await searchRes.json() : [];
+
+    if (existing && existing.length > 0) {
+      // Item exists — update quantity
+      const currentQty = parseInt(existing[0]["Current Quantity"]) || 0;
+      const newQty = type === "IN" ? currentQty + qty : Math.max(0, currentQty - qty);
+      await fetch(SHEETDB_URL + "/Item+Name/" + encodeURIComponent(item) + "?sheet=Inventory", {
+        method: "PATCH",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ data: { "Current Quantity": String(newQty), "Last Updated": ts }})
       });
-
-      // 2. Check if item exists in Inventory
-      const invBase = SHEETDB_SUBMIT_URL + "/sheets/Inventory";
-      const searchRes = await fetch(invBase + "/search?Item+Name=" + encodeURIComponent(item));
-      const existing  = await searchRes.json();
-
-      if (existing && existing.length > 0) {
-        const currentQty = parseInt(existing[0]["Current Quantity"]) || 0;
-        const newQty = type === "IN" ? currentQty + qty : Math.max(0, currentQty - qty);
-        await fetch(invBase + "/Item+Name/" + encodeURIComponent(item), {
-          method: "PATCH", headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ data: { "Current Quantity": newQty, "Last Updated": ts }})
-        });
-      } else {
-        await fetch(invBase, {
-          method: "POST", headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({ data: [{ "Item Name": item, "Current Quantity": qty, "Last Updated": ts }]})
-        });
-      }
+    } else {
+      // New item — add row to Inventory
+      await fetch(SHEETDB_URL, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          data: [{ "Item Name": item, "Current Quantity": String(qty), "Last Updated": ts }],
+          sheet: "Inventory"
+        })
+      });
     }
+
     document.getElementById("formView").style.display = "none";
     document.getElementById("successView").style.display = "flex";
     const action = type === "IN" ? "▲ Stocked In" : "▼ Taken Out";
     const newTag = isNew ? " <em>(new item — will appear in dropdown next time)</em>" : "";
-    document.getElementById("successMsg").innerHTML = "<strong>" + action + ":</strong> " + qty + "x " + item + " on " + date + newTag + "<br><br>The inventory sheet has been updated.";
+    document.getElementById("successMsg").innerHTML =
+      "<strong>" + action + ":</strong> " + qty + "x " + item + " on " + date + newTag +
+      "<br><br>The inventory sheet has been updated.";
+
   } catch(e) {
     alert("Submission failed. Please check your connection and try again.");
     btn.disabled = false; btn.innerHTML = "Submit Entry";
