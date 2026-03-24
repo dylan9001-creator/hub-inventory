@@ -219,7 +219,7 @@ async function submitForm() {
     if (existing.length > 0) {
       // Item exists — update quantity
       const currentQty = parseInt(existing[0]["Current Quantity"]) || 0;
-      const newQty = type === "IN" ? currentQty + qty : Math.max(0, currentQty - qty);
+      const newQty = type === "IN" ? currentQty + qty : currentQty - qty;
       // Use column value in URL path — SheetDB PATCH format
       await fetch(SHEETDB_URL + "/Item%20Name/" + encodeURIComponent(item) + "?sheet=Inventory", {
         method: "PATCH",
